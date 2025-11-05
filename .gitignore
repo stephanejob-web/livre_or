@@ -1,2 +1,26 @@
-
+# IDE
 .idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Configuration
+config/database.php
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+error_log
+
+# Temporary files
+*.tmp
+*.bak
+*.cache
+
+# Uploads (si vous en avez)
+uploads/
+assets/images/uploads/
