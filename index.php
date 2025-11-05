@@ -1,73 +1,62 @@
 <?php
-session_start();
-require_once 'config/database.php';
-require_once 'includes/functions.php';
-
-$pageTitle = 'Accueil - Livre d\'Or';
-include 'includes/header.php';
+require_once 'config.php';
 ?>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Livre d'Or - Accueil</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Bienvenue sur le Livre d'Or</h1>
+        <p class="subtitle">Partagez votre expérience avec nous</p>
 
-<div class="hero">
-    <h1>Bienvenue sur notre Livre d'Or</h1>
-    <p class="subtitle">Partagez votre expérience avec nous et découvrez les avis de notre communauté</p>
-</div>
-
-<div class="content-section">
-    <?php displayFlashMessage(); ?>
-
-    <div class="cards">
-        <div class="card">
-            <h2>📖 Consulter le Livre d'Or</h2>
-            <p>Découvrez les messages et témoignages laissés par nos visiteurs.</p>
-            <a href="pages/livre-or.php" class="btn btn-primary">Voir les commentaires</a>
+        <!-- Menu de navigation -->
+        <div class="menu">
+            <a href="index.php" class="btn">Accueil</a>
+            <a href="livre-or.php" class="btn">Voir le livre d'or</a>
+            <?php if(isset($_SESSION['user_id'])): ?>
+                <a href="commentaire.php" class="btn">Ajouter un commentaire</a>
+                <a href="profil.php" class="btn">Mon profil</a>
+                <a href="deconnexion.php" class="btn">Déconnexion</a>
+            <?php else: ?>
+                <a href="inscription.php" class="btn">S'inscrire</a>
+                <a href="connexion.php" class="btn">Se connecter</a>
+            <?php endif; ?>
         </div>
 
-        <?php if (isLoggedIn()): ?>
-            <div class="card">
-                <h2>✍️ Laisser un message</h2>
-                <p>Partagez votre expérience en laissant un commentaire.</p>
-                <a href="pages/commentaire.php" class="btn btn-primary">Ajouter un commentaire</a>
-            </div>
-
-            <div class="card">
-                <h2>👤 Mon Profil</h2>
-                <p>Gérez vos informations personnelles et votre compte.</p>
-                <a href="pages/profil.php" class="btn btn-primary">Accéder au profil</a>
-            </div>
-        <?php else: ?>
-            <div class="card">
-                <h2>🔐 Se connecter</h2>
-                <p>Connectez-vous pour laisser un message dans notre livre d'or.</p>
-                <a href="pages/connexion.php" class="btn btn-primary">Se connecter</a>
-            </div>
-
-            <div class="card">
-                <h2>📝 S'inscrire</h2>
-                <p>Créez un compte pour pouvoir laisser vos commentaires.</p>
-                <a href="pages/inscription.php" class="btn btn-primary">S'inscrire</a>
+        <!-- Message de bienvenue si connecté -->
+        <?php if(isset($_SESSION['user_login'])): ?>
+            <div class="info">
+                Bonjour <strong><?php echo htmlspecialchars($_SESSION['user_login']); ?></strong> !
             </div>
         <?php endif; ?>
+
+        <!-- Cartes d'information -->
+        <div class="cards">
+            <div class="card">
+                <h2>📖 Consulter</h2>
+                <p>Découvrez les messages de nos visiteurs</p>
+                <a href="livre-or.php" class="btn">Voir</a>
+            </div>
+
+            <?php if(isset($_SESSION['user_id'])): ?>
+                <div class="card">
+                    <h2>✍️ Écrire</h2>
+                    <p>Laissez votre message</p>
+                    <a href="commentaire.php" class="btn">Écrire</a>
+                </div>
+            <?php else: ?>
+                <div class="card">
+                    <h2>🔐 Connexion</h2>
+                    <p>Connectez-vous pour participer</p>
+                    <a href="connexion.php" class="btn">Se connecter</a>
+                </div>
+            <?php endif; ?>
+        </div>
     </div>
-</div>
-
-<div class="info-section">
-    <h2>À propos de notre Livre d'Or</h2>
-    <p>Notre livre d'or vous permet de partager vos impressions, témoignages et expériences. Rejoignez notre communauté et faites entendre votre voix !</p>
-
-    <div class="features">
-        <div class="feature">
-            <h3>Simple</h3>
-            <p>Interface intuitive et facile à utiliser</p>
-        </div>
-        <div class="feature">
-            <h3>Sécurisé</h3>
-            <p>Vos données sont protégées</p>
-        </div>
-        <div class="feature">
-            <h3>Communautaire</h3>
-            <p>Partagez avec d'autres utilisateurs</p>
-        </div>
-    </div>
-</div>
-
-<?php include 'includes/footer.php'; ?>
+</body>
+</html>
