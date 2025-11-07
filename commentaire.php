@@ -8,6 +8,7 @@
 // 1. INCLURE LA CONFIGURATION
 // --------------------------------------------
 require_once 'config.php';
+require_once 'MqttPublisher.php';
 
 // --------------------------------------------
 // 2. VÉRIFIER SI L'UTILISATEUR EST CONNECTÉ
@@ -62,7 +63,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if ($stmt->execute([$commentaire, $_SESSION['user_id']])) {
 
             // --------------------------------------------
-            // 4.5. REDIRECTION VERS LE LIVRE D'OR
+            // 4.5. PUBLICATION MQTT DU MESSAGE
+            // --------------------------------------------
+            // Envoyer le message sur le broker MQTT
+            $mqttPublisher = new MqttPublisher();
+            $mqttPublisher->publishUserMessage(
+                $_SESSION['user_id'],
+                $_SESSION['user_login'],
+                $commentaire
+            );
+
+            // --------------------------------------------
+            // 4.6. REDIRECTION VERS LE LIVRE D'OR
             // --------------------------------------------
             // Si l'insertion a réussi, on redirige vers la page du livre d'or
             header("Location: livre-or.php");

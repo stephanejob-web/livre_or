@@ -24,3 +24,7 @@ error_log
 # Uploads (si vous en avez)
 uploads/
 assets/images/uploads/
+
+# Composer
+vendor/
+composer.lock

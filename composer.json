@@ -1,0 +1,7 @@
+{
+    "name": "livreor/mqtt-integration",
+    "type": "project",
+    "require": {
+        "php-mqtt/client": "^1.0"
+    }
+}
