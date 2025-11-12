@@ -1,71 +1,37 @@
 <?php
-// ============================================
-// PAGE D'AJOUT DE COMMENTAIRE
-// ============================================
-// Cette page permet à un utilisateur connecté d'ajouter un commentaire
 
-// --------------------------------------------
-// 1. INCLURE LA CONFIGURATION
-// --------------------------------------------
 require_once 'config.php';
 require_once 'MqttPublisher.php';
 
-// --------------------------------------------
-// 2. VÉRIFIER SI L'UTILISATEUR EST CONNECTÉ
-// --------------------------------------------
-// ! = négation (contraire)
-// !isset() = si la variable n'existe PAS
-// Si l'utilisateur n'est pas connecté, on le redirige vers la connexion
+
 if (!isset($_SESSION['user_id'])) {
     header("Location: connexion.php");
     exit();
 }
 
-// --------------------------------------------
-// 3. INITIALISATION DES VARIABLES
-// --------------------------------------------
+
 $message = '';
 $error = '';
 
-// --------------------------------------------
-// 4. TRAITEMENT DU FORMULAIRE
-// --------------------------------------------
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-    // --------------------------------------------
-    // 4.1. RÉCUPÉRATION DU COMMENTAIRE
-    // --------------------------------------------
+
     $commentaire = trim($_POST['commentaire']);
 
-    // --------------------------------------------
-    // 4.2. VÉRIFICATION
-    // --------------------------------------------
+
     if (empty($commentaire)) {
         $error = "Le commentaire ne peut pas être vide";
     }
     else {
 
-        // --------------------------------------------
-        // 4.3. INSERTION DANS LA BASE DE DONNÉES
-        // --------------------------------------------
-        // INSERT INTO commentaires = ajouter dans la table commentaires
-        // (commentaire, id_utilisateur, date) = les colonnes à remplir
-        // VALUES (?, ?, NOW()) = les valeurs à insérer
-        // ? = placeholders pour les valeurs sécurisées
-        // NOW() = fonction SQL qui retourne la date et l'heure actuelles
+
         $stmt = $pdo->prepare("INSERT INTO commentaires (commentaire, id_utilisateur, date) VALUES (?, ?, NOW())");
 
-        // --------------------------------------------
-        // 4.4. EXÉCUTION DE LA REQUÊTE
-        // --------------------------------------------
-        // On passe le commentaire et l'ID de l'utilisateur connecté
-        // $_SESSION['user_id'] contient l'ID de l'utilisateur
+
         if ($stmt->execute([$commentaire, $_SESSION['user_id']])) {
 
-            // --------------------------------------------
-            // 4.5. PUBLICATION MQTT DU MESSAGE
-            // --------------------------------------------
-            // Envoyer le message sur le broker MQTT
+
             $mqttPublisher = new MqttPublisher();
             $mqttPublisher->publishUserMessage(
                 $_SESSION['user_id'],
@@ -73,10 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $commentaire
             );
 
-            // --------------------------------------------
-            // 4.6. REDIRECTION VERS LE LIVRE D'OR
-            // --------------------------------------------
-            // Si l'insertion a réussi, on redirige vers la page du livre d'or
+
             header("Location: livre-or.php");
             exit();
         }
